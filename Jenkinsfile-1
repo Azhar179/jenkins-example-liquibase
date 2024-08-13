@@ -1,12 +1,17 @@
 pipeline {
-  agent {
-    docker { image 'liquibase/liquibase:4.4.2' }
-  }
-  stages {
-    stage('Test') {
-      steps {
-        sh 'liquibase --version'
-      }
+    agent any
+    stages {
+        stage('Build') {
+            steps {
+                script {
+                    // Convert Windows path to Unix-style path
+                    def workspaceUnixPath = pwd().replaceAll('C:', '/c').replaceAll('\\\\', '/')
+
+                    docker.image('maven:3.8.4-openjdk-11').inside("-w ${azhar@DESKTOP-5LASEE4:/mnt/c/WINDOWS/system32}") {
+                        bat 'mvn --version'
+                    }
+                }
+            }
+        }
     }
-  }
 }
