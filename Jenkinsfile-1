@@ -1,12 +1,14 @@
 pipeline {
     agent any
     stages {
-        stage('Run Liquibase') {
+        stage('Build') {
             steps {
                 script {
-                    docker.image('liquibase/liquibase:4.4.2').inside {
-                        // Replace the workspace path with the converted Unix path
-                        sh 'liquibase --changeLogFile=/mnt/c/ProgramData/Jenkins/.jenkins/workspace/t3/changelog.xml update'
+                    // Convert Windows path to Unix-style path
+                    def workspaceUnixPath = pwd().replaceAll('C:', '/c').replaceAll('\\\\', '/')
+
+                    docker.image('maven:3.8.4-openjdk-11').inside("-w ${azhar@DESKTOP-5LASEE4:/mnt/c/WINDOWS/system32}") {
+                        bat 'mvn --version'
                     }
                 }
             }
