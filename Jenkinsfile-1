@@ -1,12 +1,15 @@
 pipeline {
-  agent {
-    docker { image 'liquibase/liquibase:4.4.2' }
-  }
-  stages {
-    stage('Test') {
-      steps {
-        sh 'liquibase --version'
-      }
+    agent any
+    stages {
+        stage('Run Liquibase') {
+            steps {
+                script {
+                    docker.image('liquibase/liquibase:4.4.2').inside {
+                        // Replace the workspace path with the converted Unix path
+                        sh 'liquibase --changeLogFile=/mnt/c/ProgramData/Jenkins/.jenkins/workspace/t3/changelog.xml update'
+                    }
+                }
+            }
+        }
     }
-  }
 }
